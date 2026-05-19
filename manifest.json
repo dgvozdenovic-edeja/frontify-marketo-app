@@ -1,0 +1,59 @@
+{
+    "appId": "cmp43je8w0001gnvx7ftqct74",
+    "appType": "platform-app",
+    "name": "frontify-marketo-app",
+    "metadata": {
+        "version": 1
+    },
+    "secrets": [
+        { "key": "MARKETO_CLIENT_ID",     "label": "Marketo Client ID" },
+        { "key": "MARKETO_CLIENT_SECRET", "label": "Marketo Client Secret" },
+        { "key": "MARKETO_IDENTITY_URL",  "label": "Marketo Identity URL" },
+        { "key": "MARKETO_INSTANCE_URL",  "label": "Marketo REST API URL" }
+    ],
+    "network": {
+        "endpoints": [
+            {
+                "name": "marketo-get-token",
+                "resource": "%%MARKETO_IDENTITY_URL%%/oauth/token?grant_type=client_credentials&client_id=%%MARKETO_CLIENT_ID%%&client_secret=%%MARKETO_CLIENT_SECRET%%",
+                "options": {
+                    "method": "GET",
+                    "headers": {
+                        "Content-Type": "application/json"
+                    }
+                }
+            },
+            {
+                "name": "marketo-create-token",
+                "resource": "%%MARKETO_INSTANCE_URL%%/asset/v1/folder/$$folder_id$$/tokens.json?name=$$token_name$$&type=URL&value=$$token_value$$",
+                "options": {
+                    "method": "POST",
+                    "headers": {
+                        "Authorization": "Bearer $$access_token$$"
+                    }
+                }
+            },
+            {
+                "name": "marketo-list-tokens",
+                "resource": "%%MARKETO_INSTANCE_URL%%/asset/v1/folder/$$folder_id$$/tokens.json",
+                "options": {
+                    "method": "GET",
+                    "headers": {
+                        "Authorization": "Bearer $$access_token$$"
+                    }
+                }
+            }
+        ]
+    },
+    "permissions": {
+        "scopes": ["basic:read", "basic:write"]
+    },
+    "surfaces": {
+        "mediaLibrary": {
+            "assetBulkActions": {
+                "title": "Sync to Marketo",
+                "filenameExtensions": ["png", "jpeg", "jpg", "gif", "svg", "pdf", "mp4", "mov"]
+            }
+        }
+    }
+}
