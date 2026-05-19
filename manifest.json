@@ -1,9 +1,9 @@
 {
-    "appId": "cmp43je8w0001gnvx7ftqct74",
+    "appId": "cmpcqvbkl0001t1vxdrvulxg5",
     "appType": "platform-app",
     "name": "frontify-marketo-app",
     "metadata": {
-        "version": 1
+        "version": 6
     },
     "secrets": [
         { "key": "MARKETO_CLIENT_ID",     "label": "Marketo Client ID" },
@@ -25,9 +25,21 @@
             },
             {
                 "name": "marketo-create-token",
-                "resource": "%%MARKETO_INSTANCE_URL%%/asset/v1/folder/$$folder_id$$/tokens.json?name=$$token_name$$&type=URL&value=$$token_value$$",
+                "resource": "%%MARKETO_INSTANCE_URL%%/asset/v1/folder/$$folder_id$$/tokens.json?folderType=Program",
                 "options": {
                     "method": "POST",
+                    "headers": {
+                        "Authorization": "Bearer $$access_token$$",
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    "body": "name=$$token_name$$&type=text&value=$$token_value$$"
+                }
+            },
+            {
+                "name": "marketo-list-programmes",
+                "resource": "%%MARKETO_INSTANCE_URL%%/asset/v1/programs.json",
+                "options": {
+                    "method": "GET",
                     "headers": {
                         "Authorization": "Bearer $$access_token$$"
                     }
@@ -35,7 +47,7 @@
             },
             {
                 "name": "marketo-list-tokens",
-                "resource": "%%MARKETO_INSTANCE_URL%%/asset/v1/folder/$$folder_id$$/tokens.json",
+                "resource": "%%MARKETO_INSTANCE_URL%%/asset/v1/folder/$$folder_id$$/tokens.json?folderType=Program",
                 "options": {
                     "method": "GET",
                     "headers": {
